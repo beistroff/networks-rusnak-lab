@@ -1,4 +1,4 @@
-namespace rysnak
+namespace GraphWay
 {
     internal static class Program
     {

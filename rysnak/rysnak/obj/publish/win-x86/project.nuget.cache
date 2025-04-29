@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "aGAiDvP8EKU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\amato\\Source\\Repos\\networks-rusnak-lab\\rysnak\\rysnak\\GraphWay.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\amato\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\8.0.8\\microsoft.netcore.app.runtime.win-x86.8.0.8.nupkg.sha512",
+    "C:\\Users\\amato\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\8.0.8\\microsoft.windowsdesktop.app.runtime.win-x86.8.0.8.nupkg.sha512",
+    "C:\\Users\\amato\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\8.0.8\\microsoft.aspnetcore.app.runtime.win-x86.8.0.8.nupkg.sha512"
+  ],
+  "logs": []
+}

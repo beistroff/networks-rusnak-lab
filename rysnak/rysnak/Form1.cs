@@ -1,10 +1,11 @@
+п»їusing System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace rysnak
+namespace GraphWay
 {
     public partial class Form1 : Form
     {
-        // Зберігаємо ребра графа
+        // Р—Р±РµСЂС–РіР°С”РјРѕ СЂРµР±СЂР° РіСЂР°С„Р°
         private Dictionary<int, List<(int destination, int weight)>> graph;
         private Dictionary<int, Point> nodePositions = new Dictionary<int, Point>();
         private HashSet<int> allNodes = new HashSet<int>();
@@ -13,7 +14,50 @@ namespace rysnak
         {
             InitializeComponent();
             graph = new Dictionary<int, List<(int destination, int weight)>>();
+        }
 
+        private void InfoButton_Click(object sender, EventArgs e)
+        {
+            string infoText = "Р”РѕРІС–РґРєР° РїСЂРѕ РїСЂРѕРіСЂР°РјРЅРёР№ РїСЂРѕРґСѓРєС‚:\r\n" +
+                              "- Р РѕР·СЂРѕР±Р»РµРЅРѕ РїС–Рґ РєРµСЂС–РІРЅРёС†С‚РІРѕРј РґРѕС†. Р СѓСЃРЅР°РєР° Рњ.Рђ.\r\n" +
+                              "- РЎС‚СѓРґРµРЅС‚Р°РјРё Р§РµСЂРЅС–РІРµС†СЊРєРѕРіРѕ РЅР°С†С–РѕРЅР°Р»СЊРЅРѕРіРѕ СѓРЅС–РІРµСЂСЃРёС‚РµС‚Сѓ С–РјРµРЅС– Р®СЂС–СЏ Р¤РµРґСЊРєРѕРІРёС‡Р°\r\n" +
+                              "- РќР°РІС‡Р°Р»СЊРЅРѕ-РЅР°СѓРєРѕРІРѕРіРѕ С–РЅСЃС‚РёС‚СѓС‚Сѓ С„С–Р·РёРєРѕ-С‚РµС…РЅС–С‡РЅРёС… С‚Р° РєРѕРјРївЂ™СЋС‚РµСЂРЅРёС… РЅР°СѓРє\r\n" +
+                              "- РќР° РљР°С„РµРґСЂС– РјР°С‚РµРјР°С‚РёС‡РЅРёС… РїСЂРѕР±Р»РµРј СѓРїСЂР°РІР»С–РЅРЅСЏ С– РєС–Р±РµСЂРЅРµС‚РёРєРё\r\n\r\n" +
+                              "Р§Р»РµРЅРё РєРѕРјР°РЅРґРё СЂРѕР·СЂРѕР±РєРё:\r\n" +
+                              "- РљРѕР·Р°Рє РђРЅРґСЂС–Р№ (Frontend Developer)\r\n" +
+                              "- Р“Р°Р»СЏСЃ РђРЅРґСЂС–Р№ (DevOps Engineer)\r\n" +
+                              "- Р’РёС€РЅСЊРѕРІСЃСЊРєР° РЇРЅР° (Backend Developer)\r\n" +
+                              "- Р¤Р°СЂРёРЅР° Р®СЂС–Р№ (Product Manager)\r\n" +
+                              "- РҐРѕР№СЃСЊРєРёР№ РћР»РµРєСЃР°РЅРґСЂ (Backend Developer)\r\n" +
+                              "- РЁРµРїРµР»СЋРє РњР°РєСЃРёРј (QA Engineer)\r\n";
+
+            Form msgForm = new Form();
+            msgForm.Text = "Р”РѕРІС–РґРєР°";
+            msgForm.Size = new Size(1200, 620);
+            msgForm.StartPosition = FormStartPosition.CenterScreen;
+
+            Label messageLabel = new Label();
+            messageLabel.Text = infoText;
+            messageLabel.Font = new Font("Segoe UI", 20);
+            messageLabel.AutoSize = false;
+            messageLabel.TextAlign = ContentAlignment.BottomLeft;
+            messageLabel.Dock = DockStyle.Fill;
+
+            Button okButton = new Button();
+            okButton.Text = "OK";
+            okButton.Font = new Font("Arial", 12);
+            okButton.Dock = DockStyle.Bottom;
+            okButton.Height = 40;
+            okButton.DialogResult = DialogResult.OK;
+
+            msgForm.Controls.Add(messageLabel);
+            msgForm.Controls.Add(okButton);
+
+            msgForm.AcceptButton = okButton;
+
+            msgForm.ShowDialog();
+
+            //MessageBox.Show(infoText, "Р”РѕРІС–РґРєР°", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -26,20 +70,21 @@ namespace rysnak
 
             if (!int.TryParse(textBox2.Text.Trim(), out int target))
             {
-                MessageBox.Show("Будь ласка, введіть коректне число в текстове поле для цільової вершини.", "Помилка вводу", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Р‘СѓРґСЊ Р»Р°СЃРєР°, РІРІРµРґС–С‚СЊ РєРѕСЂРµРєС‚РЅРµ С‡РёСЃР»Рѕ РІ С‚РµРєСЃС‚РѕРІРµ РїРѕР»Рµ РґР»СЏ С†С–Р»СЊРѕРІРѕС— РІРµСЂС€РёРЅРё.", "РџРѕРјРёР»РєР° РІРІРѕРґСѓ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             (List<int> path, int cost) = Dijkstra(1, target);
 
             if (path.Count == 0)
-                textBox3.Text = "Шлях не знайдено";
+                textBox3.Text = "РЁР»СЏС… РЅРµ Р·РЅР°Р№РґРµРЅРѕ";
             else
-                textBox3.Text = string.Join(" - ", path) + $" | Ціна: {cost}";
+                textBox3.Text = string.Join(" - ", path) + $" | Р¦С–РЅР°: {cost}";
 
             AutoArrangeNodes();
             DrawGraph(path);
         }
+
         private void ParseLines(string[] lines)
         {
             foreach (string line in lines)
@@ -56,7 +101,7 @@ namespace rysnak
                 if (!graph.ContainsKey(to)) graph[to] = new List<(int, int)>();
 
                 graph[from].Add((to, weight));
-                // graph[to].Add((from, weight)); // Розкоментуй для неорієнтованого графа
+                // graph[to].Add((from, weight)); // Р РѕР·РєРѕРјРµРЅС‚СѓР№ РґР»СЏ РЅРµРѕСЂС–С”РЅС‚РѕРІР°РЅРѕРіРѕ РіСЂР°С„Р°
 
                 allNodes.Add(from);
                 allNodes.Add(to);
@@ -104,7 +149,7 @@ namespace rysnak
             int spacingY = 220;
             int margin = 100;
             int maxTries = 500;
-            int minDistance = 100; // Мінімальна відстань між вузлами
+            int minDistance = 50; // РњС–РЅС–РјР°Р»СЊРЅР° РІС–РґСЃС‚Р°РЅСЊ РјС–Р¶ РІСѓР·Р»Р°РјРё
 
             List<int> sortedNodes = allNodes.ToList();
             sortedNodes.Sort();
@@ -148,7 +193,7 @@ namespace rysnak
                         }
                     }
 
-                    // Якщо після всіх спроб не вдалося знайти вільне місце — просто зсунь нижче
+                    // РЇРєС‰Рѕ РїС–СЃР»СЏ РІСЃС–С… СЃРїСЂРѕР± РЅРµ РІРґР°Р»РѕСЃСЏ Р·РЅР°Р№С‚Рё РІС–Р»СЊРЅРµ РјС–СЃС†Рµ вЂ” РїСЂРѕСЃС‚Рѕ Р·СЃСѓРЅСЊ РЅРёР¶С‡Рµ
                     if (!found)
                     {
                         newPoint = new Point(margin + rand.Next(0, pictureBox1.Width - 2 * margin), baseY + 200);
@@ -163,28 +208,50 @@ namespace rysnak
             }
         }
 
-
-        // Допоміжний метод для обчислення відстані між двома точками
+        // Р”РѕРїРѕРјС–Р¶РЅРёР№ РјРµС‚РѕРґ РґР»СЏ РѕР±С‡РёСЃР»РµРЅРЅСЏ РІС–РґСЃС‚Р°РЅС– РјС–Р¶ РґРІРѕРјР° С‚РѕС‡РєР°РјРё
         private double GetDistance(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
         }
 
+        private void ArrangeNodesInCircle()
+        {
+            int nodeCount = graph.Keys.Count;
+            int centerX = pictureBox1.Width / 2;
+            int centerY = pictureBox1.Height / 2;
+            int radius = Math.Min(centerX, centerY) - 50;
 
+            double angleStep = 2 * Math.PI / nodeCount;
+            int i = 0;
+
+            nodePositions.Clear(); // РћРЅРѕРІР»СЋС”РјРѕ СЂРѕР·С‚Р°С€СѓРІР°РЅРЅСЏ
+
+            foreach (var node in graph.Keys)
+            {
+                double angle = i * angleStep;
+                int x = centerX + (int)(radius * Math.Cos(angle));
+                int y = centerY + (int)(radius * Math.Sin(angle));
+                nodePositions[node] = new Point(x, y);
+                i++;
+            }
+        }
 
         private void DrawGraph(List<int> path)
         {
+            ArrangeNodesInCircle();
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-
-            int radius = 20;
-            Font font = new Font("Arial", 10);
-            Pen arrowPen = new Pen(Color.Black, 2) { EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor };
-            Pen highlightPen = new Pen(Color.Red, 3) { EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor };
+            int scale = 2;
+            int radius = 20 * scale;
+            Font font = new Font("Arial", 10 * scale);
+            Pen arrowPen = new Pen(Color.Black, 4) { EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor };
+            Pen highlightPen = new Pen(Color.Red, 6) { EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor };
+            arrowPen.CustomEndCap = new AdjustableArrowCap(6, 6);
+            highlightPen.CustomEndCap = new AdjustableArrowCap(6, 6);
 
             //foreach (var from in graph.Keys)
             //{
@@ -209,7 +276,7 @@ namespace rysnak
             //}
 
             Random rand = new Random();
-            Dictionary<(int, int), Point> edgeOffsets = new Dictionary<(int, int), Point>(); // Для збереження зсуву для кожного ребра
+            Dictionary<(int, int), Point> edgeOffsets = new Dictionary<(int, int), Point>(); // Р”Р»СЏ Р·Р±РµСЂРµР¶РµРЅРЅСЏ Р·СЃСѓРІСѓ РґР»СЏ РєРѕР¶РЅРѕРіРѕ СЂРµР±СЂР°
 
             foreach (var from in graph.Keys)
             {
@@ -221,45 +288,45 @@ namespace rysnak
                     Point p1 = nodePositions[from];
                     Point p2 = nodePositions[to];
 
-                    // Обчислюємо унікальний ключ для кожного ребра
+                    // РћР±С‡РёСЃР»СЋС”РјРѕ СѓРЅС–РєР°Р»СЊРЅРёР№ РєР»СЋС‡ РґР»СЏ РєРѕР¶РЅРѕРіРѕ СЂРµР±СЂР°
                     var edgeKey = (from < to) ? (from, to) : (to, from);
 
-                    // Якщо вже були обчислені зсуви для цього ребра, використовуємо їх
+                    // РЇРєС‰Рѕ РІР¶Рµ Р±СѓР»Рё РѕР±С‡РёСЃР»РµРЅС– Р·СЃСѓРІРё РґР»СЏ С†СЊРѕРіРѕ СЂРµР±СЂР°, РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ С—С…
                     if (!edgeOffsets.ContainsKey(edgeKey))
                     {
-                        // Для кожного ребра додаємо випадковий зсув для контролюючих точок
-                        int offsetX = rand.Next(-50, 50); // Випадковий зсув по осі X
-                        int offsetY = rand.Next(-30, 30); // Випадковий зсув по осі Y
+                        // Р”Р»СЏ РєРѕР¶РЅРѕРіРѕ СЂРµР±СЂР° РґРѕРґР°С”РјРѕ РІРёРїР°РґРєРѕРІРёР№ Р·СЃСѓРІ РґР»СЏ РєРѕРЅС‚СЂРѕР»СЋСЋС‡РёС… С‚РѕС‡РѕРє
+                        int offsetX = rand.Next(-50, 50); // Р’РёРїР°РґРєРѕРІРёР№ Р·СЃСѓРІ РїРѕ РѕСЃС– X
+                        int offsetY = rand.Next(-30, 30); // Р’РёРїР°РґРєРѕРІРёР№ Р·СЃСѓРІ РїРѕ РѕСЃС– Y
                         edgeOffsets[edgeKey] = new Point(offsetX, offsetY);
                     }
 
-                    // Отримуємо зсув для поточної дуги
+                    // РћС‚СЂРёРјСѓС”РјРѕ Р·СЃСѓРІ РґР»СЏ РїРѕС‚РѕС‡РЅРѕС— РґСѓРіРё
                     Point offset = edgeOffsets[edgeKey];
 
-                    // Якщо ця дуга належить шляху — підсвічується червоним
+                    // РЇРєС‰Рѕ С†СЏ РґСѓРіР° РЅР°Р»РµР¶РёС‚СЊ С€Р»СЏС…Сѓ вЂ” РїС–РґСЃРІС–С‡СѓС”С‚СЊСЃСЏ С‡РµСЂРІРѕРЅРёРј
                     if (path != null && path.Contains(from) && path.Contains(to) &&
                         path.IndexOf(to) - path.IndexOf(from) == 1)
-                        g.DrawLine(highlightPen, p1, p2); // Червона стрілка
+                        g.DrawLine(highlightPen, p1, p2); // Р§РµСЂРІРѕРЅР° СЃС‚СЂС–Р»РєР°
                     else
                     {
-                        // Для вигнутих ліній використовуємо криву Безьє
+                        // Р”Р»СЏ РІРёРіРЅСѓС‚РёС… Р»С–РЅС–Р№ РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ РєСЂРёРІСѓ Р‘РµР·СЊС”
                         Point controlPoint = new Point((p1.X + p2.X) / 2 + offset.X,
                                                       (p1.Y + p2.Y) / 2 + offset.Y);
-                        g.DrawBezier(arrowPen, p1, controlPoint, controlPoint, p2); // Стрілка з вигином
+                        g.DrawBezier(arrowPen, p1, controlPoint, controlPoint, p2); // РЎС‚СЂС–Р»РєР° Р· РІРёРіРёРЅРѕРј
                     }
 
-                    // Малюємо вагу дуги біля її середини
-                    int midX2 = p2.X - (p2.X - p1.X) / 5; // Ближче до p2
+                    // РњР°Р»СЋС”РјРѕ РІР°РіСѓ РґСѓРіРё Р±С–Р»СЏ С—С— СЃРµСЂРµРґРёРЅРё
+                    int midX2 = p2.X - (p2.X - p1.X) / 5; // Р‘Р»РёР¶С‡Рµ РґРѕ p2
                     int midY2 = p2.Y - (p2.Y - p1.Y) / 5;
 
-                    // Вимірюємо розмір тексту для ваги
+                    // Р’РёРјС–СЂСЋС”РјРѕ СЂРѕР·РјС–СЂ С‚РµРєСЃС‚Сѓ РґР»СЏ РІР°РіРё
                     string weightText = weight.ToString();
                     SizeF size = g.MeasureString(weightText, font);
 
-                    // Малюємо прямокутник з білим фоном для ваги
+                    // РњР°Р»СЋС”РјРѕ РїСЂСЏРјРѕРєСѓС‚РЅРёРє Р· Р±С–Р»РёРј С„РѕРЅРѕРј РґР»СЏ РІР°РіРё
                     g.FillRectangle(Brushes.White, midX2 - size.Width / 2 - 2, midY2 - size.Height / 2 - 2, size.Width + 4, size.Height + 4);
 
-                    // Малюємо саму вагу
+                    // РњР°Р»СЋС”РјРѕ СЃР°РјСѓ РІР°РіСѓ
                     g.DrawString(weightText, font, Brushes.Black, midX2 - size.Width / 2, midY2 - size.Height / 2);
                 }
             }
@@ -270,7 +337,11 @@ namespace rysnak
                 int node = kvp.Key;
                 Point pos = kvp.Value;
 
-                g.FillEllipse(Brushes.LightYellow, pos.X - radius, pos.Y - radius, radius * 2, radius * 2);
+                Color semiTransparentYellow = Color.FromArgb(150, Color.LightYellow); // 150 вЂ” РїСЂРѕР·РѕСЂС–СЃС‚СЊ (0-255)
+                using (SolidBrush transparentBrush = new SolidBrush(semiTransparentYellow))
+                {
+                    g.FillEllipse(transparentBrush, pos.X - radius, pos.Y - radius, radius * 2, radius * 2);
+                }
                 g.DrawEllipse(Pens.Black, pos.X - radius, pos.Y - radius, radius * 2, radius * 2);
 
                 string text = node.ToString();
@@ -329,7 +400,7 @@ namespace rysnak
             {
                 path.Add(currentNode);
                 if (!previous.ContainsKey(currentNode))
-                    return (new List<int>(), 0); // шляху немає
+                    return (new List<int>(), 0); // С€Р»СЏС…Сѓ РЅРµРјР°С”
                 currentNode = previous[currentNode];
             }
             path.Add(start);
@@ -361,7 +432,7 @@ namespace rysnak
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string[] lines = File.ReadAllLines(openFileDialog.FileName);
-                textBox1.Text = string.Join(Environment.NewLine, lines); // Показуємо у TextBox
+                textBox1.Text = string.Join(Environment.NewLine, lines); // РџРѕРєР°Р·СѓС”РјРѕ Сѓ TextBox
             }
         }
     }
